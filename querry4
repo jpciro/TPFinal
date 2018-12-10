@@ -1,0 +1,22 @@
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+
+enum{}
+
+int main(int agrc, char* agrv[]){
+  if(agrc!=2){
+    printf("Espero 1 entrada\n");
+    return 0;
+  }
+  
+  FILE* movimientos;
+  movimientos= fopen("movimientos.csv", "r");
+  if(movimientos==NULL){
+    printf("No se pudo abrir el archivo movimientos.csv\n");
+    return 0;
+  }
+  int vec[24][24]=calloc(24*24, int);
+  
+  
+}
