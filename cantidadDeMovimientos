@@ -81,6 +81,6 @@ void buscarDatos(char s[], const char delim[],int* auxDia, int* auxClasificacion
 
 int queDiaEs(int anio, int mes, int dia){
   static int t[]={0, 3, 2, 5, 0, 3, 5, 1, 4, 6, 2, 4};
-  y-= mes<3
-  return (anio + ania/4 - anio/100 + anio/400 + t[mes-1] + dia)% 7;
+  anio-= mes<3
+  return (anio + anio/4 - anio/100 + anio/400 + t[mes-1] + dia)% 7;
 }
