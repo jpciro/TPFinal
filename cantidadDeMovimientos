@@ -3,31 +3,32 @@
 #include <stdlib.h>
 #include <time.h>
 
-
+int queDiaEs(int anio, int mes, int dia);
+void buscarDatos(char s[], const char delim[],int* auxDia, int* auxClasificacion);
 typedef struct movimientosSemanales{
   char* dia;
   int cabotaje;
   int internacional;
-  itn total;
+  int total;
 }movimientosSemanales;
 
 enum{domingo=0, lunes, martes, miercoles, jueves, viernes, sabado};
-  
+
 int main(int agrc, char* agrv[]){
   if(agrc!=2){
     printf("Espero 1 entrada\n");
     return 0;
   }
-  
+
   FILE* movimientos;
   movimientos= fopen("movimientos.csv", "r");
   if(movimientos==NULL){
     printf("No se pudo abrir el archivo movimientos.csv\n");
     return 0;
   }
-  
+
   char* s=malloc(150);
-  
+
   movimientosSemanales* struct0=calloc(1, sizeof(movimientosSemanales));
   movimientosSemanales* struct1=calloc(1, sizeof(movimientosSemanales));
   movimientosSemanales* struct2=calloc(1, sizeof(movimientosSemanales));
@@ -36,7 +37,7 @@ int main(int agrc, char* agrv[]){
   movimientosSemanales* struct5=calloc(1, sizeof(movimientosSemanales));
   movimientosSemanales* struct6=calloc(1, sizeof(movimientosSemanales));
   movimientosSemanales* resp[7]={struct0, struct1, struct2, struct3, struct4, struct5, struct6};
-  
+
   resp[0]->dia="domingo";
   resp[1]->dia="lunes";
   resp[2]->dia="martes";
@@ -44,20 +45,35 @@ int main(int agrc, char* agrv[]){
   resp[4]->dia="jueves";
   resp[5]->dia="viernes";
   resp[6]->dia="sabado";
- 
-  const char delim[3]=";"
 
-  int* auxDia, auxClasificacion;
+  const char delim[3]=";";
+
+  int* auxDia;
+  int* auxClasificacion;
   fgets(s, 150, movimientos);
-  
+
   while(fgets(s, 150, movimientos)){
-    buscaDatos(s, delim, auxDia, auxClasificacion);
+    buscarDatos(s, delim, auxDia, auxClasificacion);
     if(auxClasificacion=0)
-      resp[auxDia].internacional++;
-    else resp[auxDia].cabotaje++;
-    resp[auxDia].total++;
+      resp[*auxDia]->internacional++;
+    else resp[*auxDia]->cabotaje++;
+    resp[*auxDia]->total++;
   }
- return 0; 
+ printf("Dia;Cabotaje;Internacional;Total");
+ int i;
+ for(i=0;i<7;i++){
+  printf("%s;%d;%d;%d/n", resp[i]->dia, resp[i]->cabotaje, resp[i]->internacional, resp[i]->total);
+ }
+ free(struct0);
+ free(struct1);
+ free(struct2);
+ free(struct3);
+ free(struct4);
+ free(struct5);
+ free(struct6);
+ free(s);
+ fclose(movimientos);
+ return 0;
 }
 
 void buscarDatos(char s[], const char delim[],int* auxDia, int* auxClasificacion){
@@ -68,19 +84,19 @@ void buscarDatos(char s[], const char delim[],int* auxDia, int* auxClasificacion
     int dia, mes, anio;
     sscanf(aux, "%d/%d/%d",&dia, &mes, &anio);
     //sakamoto's algorythm
-    auxDia=queDiaEs(anio, mes, dia);   
+    *auxDia=queDiaEs(anio, mes, dia);
     while(campo!=4){
     aux=strtok(NULL, delim);
     campo++;
     }
     if(strcmp("Internacional", aux)==0)
-      auxClasificacion=0;
-    else auxClasificacion=1;
+      *auxClasificacion=0;
+    else *auxClasificacion=1;
 }
 
 
 int queDiaEs(int anio, int mes, int dia){
   static int t[]={0, 3, 2, 5, 0, 3, 5, 1, 4, 6, 2, 4};
-  anio-= mes<3
+  anio-= mes<3;
   return (anio + anio/4 - anio/100 + anio/400 + t[mes-1] + dia)% 7;
 }
