@@ -21,7 +21,9 @@ int main(int agrc, char* agrv[]){
   }
 
   FILE* movimientos;
+  FILE* nuevo;
   movimientos= fopen("movimientos.csv", "r");
+  nuevo=fopen("dia_semana.csv", "w");
   if(movimientos==NULL){
     printf("No se pudo abrir el archivo movimientos.csv\n");
     return 0;
@@ -59,11 +61,14 @@ int main(int agrc, char* agrv[]){
     else resp[*auxDia]->cabotaje++;
     resp[*auxDia]->total++;
   }
- printf("Dia;Cabotaje;Internacional;Total");
+ fprintf(nuevo, "%s;%s;%s;%s", "Dia","Cabootaje","Internacional", "Total");
  int i;
  for(i=0;i<7;i++){
-  printf("%s;%d;%d;%d/n", resp[i]->dia, resp[i]->cabotaje, resp[i]->internacional, resp[i]->total);
+  fprintf(nuevo, "%s;%d;%d;%d",resp[i]->dia, resp[i]->cabotaje, resp[i]->internacional, resp[i]->total);
  }
+
+
+
  free(struct0);
  free(struct1);
  free(struct2);
@@ -73,6 +78,7 @@ int main(int agrc, char* agrv[]){
  free(struct6);
  free(s);
  fclose(movimientos);
+ fclose(nuevo);
  return 0;
 }
 
@@ -100,3 +106,4 @@ int queDiaEs(int anio, int mes, int dia){
   anio-= mes<3;
   return (anio + anio/4 - anio/100 + anio/400 + t[mes-1] + dia)% 7;
 }
+
